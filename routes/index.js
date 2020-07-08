@@ -11,9 +11,7 @@ router.get('/string', async (ctx) => {
 })
 
 router.get('/json', async (ctx) => {
-  ctx.body = {
-    title: 'koa2 json'
-  }
+  ctx.body = { body: 'hello' }
 })
 
 module.exports = router
