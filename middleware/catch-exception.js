@@ -1,13 +1,12 @@
+const { isDev, isTest } = require('../conf/constant')
+
 async function catchException(ctx, next) {
   try{
     await next();
   } catch(ex) {
-    // env === ?
-    
-    // if dev and test throw(ex)
-    
-    // if prod
-    ctx.body = { code: 500, msg: 'ERROR: ' + ex.message }
+    ctx.body = { code: 500, msg: ex.message }
+
+    if(isDev || isTest) throw ex;
   }
 }
 

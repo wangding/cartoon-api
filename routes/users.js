@@ -18,6 +18,7 @@ router.post('/login', async (ctx) => {
   const {userName, password} = ctx.request.body
   console.log('userName:', userName)
   console.log('password:', password)
+  console.log('headers:', ctx.header)
 
   let userInfo = null
   if(userName === 'wangding' && password === 'abc') {

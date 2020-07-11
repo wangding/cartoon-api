@@ -2,9 +2,11 @@
 const router  = require('koa-router')(),
       Op      = require('sequelize').Op,
       DB_CONF = require('../conf/db'),
-      author  = require('../models/author');
+      author  = require('../models/author'),
+      { validateLength } = require('../lib/wd-validate'),
+      { ERR_PREFIX, OK_MSG } = require('../conf/constant');
 
-router.prefix('/api/author')
+router.prefix('/api/authors')
 
 router.get('/', async (ctx) => {
   let { page, limit } = await ctx.query
@@ -19,7 +21,7 @@ router.get('/', async (ctx) => {
 
   ctx.body = {
     code: 0,
-    msg: '',
+    msg: OK_MSG,
     count: aus.count,
     data: aus.rows
   };
@@ -40,13 +42,13 @@ router.get('/:authorName', async (ctx) => {
   console.log('aus:', aus)
 
   if(aus.count === 0) {
-    ctx.body = { code: 40101, msg: '作者不存在！' };
+    ctx.body = { code: 40101, msg: `${ERR_PREFIX}作者不存在！` };
     return;
   }
 
   ctx.body = {
     code: 0,
-    msg: '',
+    msg: OK_MSG,
     count: aus.count,
     data: aus.rows
   };
@@ -61,38 +63,41 @@ router.del('/:id', async (ctx) => {
 
   await author.destroy({ where: { id: { [Op.in]: ids } } })
 
-  ctx.body = { code: 0, msg: '操作成功' };
+  ctx.body = { code: 0, msg: OK_MSG };
 });
+
 
 router.post('/', async (ctx) => {
   const { authorName } = ctx.request.body
 
+  validateLength(authorName, '作者名')
   const [ arr, res ] = await author.findOrCreate({
     where: { author_name: authorName }
   })
-   
+
   if(res) {
-    ctx.body = { code: 0, msg: '操作成功' } 
+    ctx.body = { code: 0, msg: OK_MSG }
     return
   }
 
-  ctx.body = { code: 40102, msg: '作者已存在！' }
+  ctx.body = { code: 40102, msg: `${ERR_PREFIX}作者已存在！` }
 })
 
 router.put('/:id', async (ctx) => {
   const { id } = ctx.params
   const { authorName } = ctx.request.body
 
-  const [us] = await author.update({ 
+  validateLength(authorName, '作者名')
+  const [us] = await author.update({
     author_name: authorName
   }, { where: { id } })
 
   if(us === 0) {
-    ctx.body = { code: 40101, msg: '作者不存在！' }
+    ctx.body = { code: 40101, msg: `${ERR_PREFIX}作者不存在！` }
     return
   }
 
-  ctx.body = { code: 0, msg: '操作成功' }
+  ctx.body = { code: 0, msg: OK_MSG }
 })
 
 module.exports = router
