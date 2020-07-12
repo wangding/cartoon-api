@@ -6,5 +6,7 @@ module.exports = {
   OK_MSG: '操作成功',
   isDev: env === 'development',
   isTest: env === 'testing',
-  isProd: env === 'production'
+  isProd: env === 'production',
+  adminExpiresIn: '5h',
+  userExpiresIn: '12h'
 }

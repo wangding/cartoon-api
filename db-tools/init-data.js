@@ -17,7 +17,7 @@ async function areaData() {
   await area.create({ area_name: '台湾' });
   await area.create({ area_name: '日本' });
   await area.create({ area_name: '韩国' });
-  await area.create({ area_name: '美国' });
+  await area.create({ area_name: '欧美' });
 }
 
 async function authorData() {

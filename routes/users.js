@@ -1,8 +1,11 @@
 const router = require('koa-router')()
 const jwt = require('jsonwebtoken'),
-      { SECRET } = require('../conf/constant'),
-      util = require('util'),
-      verify = util.promisify(jwt.verify)
+      /*util = require('util'),*/
+      /*verify = util.promisify(jwt.verify),*/
+      {
+        SECRET,
+        adminExpiresIn
+      } = require('../conf/constant')
 
 router.prefix('/api/user')
 
@@ -21,7 +24,7 @@ router.post('/login', async (ctx) => {
   console.log('headers:', ctx.header)
 
   let userInfo = null
-  if(userName === 'wangding' && password === 'abc') {
+  if(userName === 'wangding' && password === 'ddd') {
     // 登录成功，获取用户信息
     userInfo = {
       id: 1,
@@ -34,7 +37,7 @@ router.post('/login', async (ctx) => {
   // 加密 userInfo
   let token
   if(userInfo) {
-    token = jwt.sign(userInfo, SECRET, { expiresIn: '1h' })
+    token = jwt.sign(userInfo, SECRET, { expiresIn: adminExpiresIn })
   }
 
   if(userInfo === null) {

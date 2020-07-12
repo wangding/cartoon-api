@@ -5,15 +5,8 @@ const attributes = {
   author_name: {
     type: DataTypes.STRING,
     allowNull: false,
+    unique: true
   }
 };
 
-const options = {
-  indexes: [{
-    name: 'author_name',
-    using: 'BTREE',
-    fields: ['author_name']
-  }]
-};
-
-module.exports = seq.define('author', attributes, options); 
+module.exports = seq.define('author', attributes);

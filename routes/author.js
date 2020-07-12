@@ -2,7 +2,7 @@
 const router  = require('koa-router')(),
       Op      = require('sequelize').Op,
       DB_CONF = require('../conf/db'),
-      author  = require('../models/author'),
+      author    = require('../models/author'),
       { validateLength } = require('../lib/wd-validate'),
       { ERR_PREFIX, OK_MSG } = require('../conf/constant');
 
@@ -30,16 +30,12 @@ router.get('/', async (ctx) => {
 router.get('/:authorName', async (ctx) => {
   let { authorName } = await ctx.params
 
-  console.log('authorName:', authorName)
-
   // authorName 的数据合法性校验，有待完善
   if(typeof authorName === 'undefined') return;
 
   const aus = await author.findAndCountAll({
     where: { author_name: { [Op.substring]: authorName } }
   });
-
-  console.log('aus:', aus)
 
   if(aus.count === 0) {
     ctx.body = { code: 40101, msg: `${ERR_PREFIX}作者不存在！` };
@@ -58,14 +54,11 @@ router.del('/:id', async (ctx) => {
   let { id } = ctx.params
   let ids = id.split(',')
 
-  console.log(ctx.header)
   // id 的数据合法性校验，有待完善
-
   await author.destroy({ where: { id: { [Op.in]: ids } } })
 
   ctx.body = { code: 0, msg: OK_MSG };
 });
-
 
 router.post('/', async (ctx) => {
   const { authorName } = ctx.request.body
