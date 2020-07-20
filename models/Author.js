@@ -1,5 +1,5 @@
 const { DataTypes } = require('sequelize'),
-      seq           = require('../db-tools/seq');
+      { seq }       = require('../lib/util');
 
 const attributes = {
   author_name: {

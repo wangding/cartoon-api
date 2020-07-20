@@ -13,10 +13,10 @@ const loadRouters = require('require-directory')
 // error handler
 //onerror(app)
 
-app.use(catchEx)
+//app.use(catchEx)
 app.use(cors({ origin: '*', methods: 'GET,PUT,POST,DELETE' }))
-app.use(jwt({ secret: SECRET })
-  .unless({ path: [/^\/api\/user\/login/]}))
+//app.use(jwt({ secret: SECRET })
+  //.unless({ path: [/^\/api\/admins\/login$/]}))
 app.use(bodyparser({ enableTypes: ['json', 'form', 'text'] }))
 app.use(json())
 app.use(logger())

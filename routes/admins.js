@@ -7,15 +7,7 @@ const jwt = require('jsonwebtoken'),
         adminExpiresIn
       } = require('../conf/constant')
 
-router.prefix('/api/users')
-
-router.get('/', function (ctx) {
-  ctx.body = 'this is a users response!'
-})
-
-router.get('/bar', function (ctx) {
-  ctx.body = 'this is a users/bar response'
-})
+router.prefix('/api/admins')
 
 router.post('/login', async (ctx) => {
   const {userName, password} = ctx.request.body
@@ -24,12 +16,12 @@ router.post('/login', async (ctx) => {
   console.log('headers:', ctx.header)
 
   let userInfo = null
-  if(userName === 'wangding' && password === 'ddd') {
+  if(userName === 'admin' && password === 'ddd') {
     // 登录成功，获取用户信息
     userInfo = {
       id: 1,
-      userName: 'wangding',
-      nickName: '王顶',
+      userName: 'admin',
+      nickName: '系统管理员',
       gender: 1
     }
   }

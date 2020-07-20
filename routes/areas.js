@@ -2,19 +2,19 @@
 const router  = require('koa-router')(),
       Op      = require('sequelize').Op,
       DB_CONF = require('../conf/db'),
-      tag    = require('../models/tag'),
+      { Area }= require('../models'),
       { validateLength } = require('../lib/wd-validate'),
       { ERR_PREFIX, OK_MSG } = require('../conf/constant');
 
-router.prefix('/api/tags')
+router.prefix('/api/areas')
 
 router.get('/', async (ctx) => {
-  let { page, limit } = await ctx.query
+  let { page, limit } = ctx.query
 
   // page 的数据合法性校验，有待完善
   if(typeof page === 'undefined') page = 1
 
-  const aus = await tag.findAndCountAll({
+  const aus = await Area.findAndCountAll({
     limit: DB_CONF.pageLimit,
     offset: (page-1) * DB_CONF.pageLimit
   });
@@ -27,18 +27,18 @@ router.get('/', async (ctx) => {
   };
 })
 
-router.get('/:tagName', async (ctx) => {
-  let { tagName } = await ctx.params
+router.get('/:areaName', async (ctx) => {
+  let { areaName } = ctx.params
 
-  // tagName 的数据合法性校验，有待完善
-  if(typeof tagName === 'undefined') return;
+  // areaName 的数据合法性校验，有待完善
+  if(typeof areaName === 'undefined') return;
 
-  const aus = await tag.findAndCountAll({
-    where: { tag_name: { [Op.substring]: tagName } }
+  const aus = await Area.findAndCountAll({
+    where: { area_name: { [Op.substring]: areaName } }
   });
 
   if(aus.count === 0) {
-    ctx.body = { code: 40301, msg: `${ERR_PREFIX}标签不存在！` };
+    ctx.body = { code: 40201, msg: `${ERR_PREFIX}区域不存在！` };
     return;
   }
 
@@ -55,17 +55,17 @@ router.del('/:id', async (ctx) => {
   let ids = id.split(',')
 
   // id 的数据合法性校验，有待完善
-  await tag.destroy({ where: { id: { [Op.in]: ids } } })
+  await Area.destroy({ where: { id: { [Op.in]: ids } } })
 
   ctx.body = { code: 0, msg: OK_MSG };
 });
 
 router.post('/', async (ctx) => {
-  const { tagName } = ctx.request.body
+  const { areaName } = ctx.request.body
 
-  validateLength(tagName, '标签名')
-  const [ arr, res ] = await tag.findOrCreate({
-    where: { tag_name: tagName }
+  validateLength(areaName, '区域名')
+  const [ arr, res ] = await Area.findOrCreate({
+    where: { area_name: areaName }
   })
 
   if(res) {
@@ -73,20 +73,20 @@ router.post('/', async (ctx) => {
     return
   }
 
-  ctx.body = { code: 40302, msg: `${ERR_PREFIX}标签已存在！` }
+  ctx.body = { code: 40202, msg: `${ERR_PREFIX}区域已存在！` }
 })
 
 router.put('/:id', async (ctx) => {
   const { id } = ctx.params
-  const { tagName } = ctx.request.body
+  const { areaName } = ctx.request.body
 
-  validateLength(tagName, '标签名')
-  const [us] = await tag.update({
-    tag_name: tagName
+  validateLength(areaName, '区域名')
+  const [us] = await Area.update({
+    area_name: areaName
   }, { where: { id } })
 
   if(us === 0) {
-    ctx.body = { code: 40301, msg: `${ERR_PREFIX}标签不存在！` }
+    ctx.body = { code: 40201, msg: `${ERR_PREFIX}区域不存在！` }
     return
   }
 

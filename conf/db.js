@@ -7,8 +7,14 @@ const DB_CONF = {
   database: 'test',
   pageLimit: 10,      // 分页，每页显示记录数量
 
+  pool: {
+    max: 15,
+    min: 0,
+    acquire: 90000,
+    idle: 10000
+  },
+
   define: {
-    freezeTableName: true,
     timestamps: true,
     paranoid: true,
     createdAt: 'create_time',
